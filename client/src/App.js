@@ -1,9 +1,10 @@
 import React from 'react';
-import Header from './components/header';
-import Hero from './components/hero';
-import InputSection from './components/inputSection';
-import Description from './components/desc';
-import Note from './components/note';
+import Header from './home/header';
+import Hero from './home/hero';
+import InputSection from './home/inputSection';
+import Description from './home/desc';
+import Note from './home/note';
+import Footer from './home/footer';
 import './App.css';
 
 function App() {
@@ -28,7 +29,7 @@ function App() {
       />
       <Description />
       <Note />
-      {/* Other components can be added here */}
+      <Footer />
     </div>
   );
 }

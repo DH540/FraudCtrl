@@ -1,12 +1,12 @@
 .note-section {
   background-color: #f5bf82;
   padding: 3rem 0;
+  margin-bottom: 3rem;
 }
 
 .note-container {
   max-width: 800px;
   margin: 0 auto;
-  border: solid 1px #1a1a1a;
 }
 
 /*!!!!No Edits Above This Line!!!!*/

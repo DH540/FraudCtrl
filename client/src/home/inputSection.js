@@ -8,7 +8,7 @@ const InputSection = ({
     onModelChange = () => {}, 
     onAnalyze = () => {}
 }) => {
-    const MAX_WORDS = 500;
+    const MAX_WORDS = 100;
 
     const wordCount = textToReview.trim()
         ? textToReview.trim().split(/\s+/).length
