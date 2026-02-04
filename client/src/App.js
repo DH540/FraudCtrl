@@ -3,6 +3,7 @@ import Header from './components/header';
 import Hero from './components/hero';
 import InputSection from './components/inputSection';
 import Description from './components/desc';
+import Note from './components/note';
 import './App.css';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         onAnalyze={handleAnalyze}
       />
       <Description />
+      <Note />
       {/* Other components can be added here */}
     </div>
   );
