@@ -1,5 +1,5 @@
 .hero {
-  background-color: #fafafa;
+  background-color: #ffffff;
   padding: 4rem 0;
   text-align: center;
 }
@@ -12,7 +12,9 @@
 .hero-content {
   max-width: 800px;
   margin: 0 auto;
+  border: solid 1px #1a1a1a;
 }
+
 /*!!!!No Edits Above This Line!!!!*/
 
 .hero-title {

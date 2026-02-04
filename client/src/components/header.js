@@ -2,11 +2,14 @@ import React from "react";
 import './header.css';
 
 const Header = () => {
+    const features = [
+      {icon: "/logo1.png", description: 'WebsiteLogo'},  
+    ];
     return (
         <header className="header">
             <div className="header-container">
                 <div className="logo">
-                    <span className="logo-icon">🔒</span>
+                    <img src={features[0].icon} alt={features[0].description} className="logo-icon"></img>
                     <span className="logo-text">FraudCtrl</span>
                 </div>
 

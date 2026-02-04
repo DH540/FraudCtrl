@@ -2,6 +2,7 @@ import React from 'react';
 import Header from './components/header';
 import Hero from './components/hero';
 import InputSection from './components/inputSection';
+import Description from './components/desc';
 import './App.css';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         onModelChange={setSelectedModel}
         onAnalyze={handleAnalyze}
       />
+      <Description />
       {/* Other components can be added here */}
     </div>
   );
