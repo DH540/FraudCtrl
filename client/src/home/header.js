@@ -3,7 +3,8 @@ import './header.css';
 
 const Header = () => {
     const features = [
-      {icon: "/logo1.png", description: 'WebsiteLogo'},  
+      {icon: "/logo1.png", description: 'WebsiteLogo'},
+      {icon: "/globe.png", description: 'GlobeIcon'},  
     ];
     return (
         <header className="header">
@@ -15,13 +16,13 @@ const Header = () => {
 
                 <div className="header-right">
                     <nav className="nav-links">
-                        <a href="#github" className="nav-link">GitHub</a>
+                        <a href="https://github.com/DH540/FraudCtrl/tree/main" className="nav-link">GitHub</a>
                         <a href="#contact" className="nav-link">Contact Us</a>
                         <a href="#documentation" className="nav-link">Documentation</a>
                     </nav>
 
                     <div className="language-selector">
-                        <span className="globe-icon">🌐</span>
+                        <img src={features[1].icon} alt={features[1].description} className="globe-icon" />
                         <select className="language-dropdown">
                             <option value="en">EN</option>
                             <option value="es">ES</option>
