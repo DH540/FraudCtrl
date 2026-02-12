@@ -1,10 +1,12 @@
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from '../context/TranslationContext';
 import './results.css';
 
 import Header from '../home/header';
 import Footer from '../home/footer';
 
 function Results() {
+  const { t } = useTranslation();
   const location = useLocation();
   const { text, model } = location.state || { text: "No text provided...", model: "Unknown" };
 
@@ -17,7 +19,7 @@ function Results() {
     <div>
       <Header />
       <div className="results-container">
-        <p className="results-header">The product review you requested for review is</p>
+        <p className="results-header">{t('results.header')}</p>
         <div className="dashboard-grid">     
           <div className="score-card">
             <div className="circle-chart">
@@ -43,7 +45,7 @@ function Results() {
             </div>
             <div className="scale-labels">
               <span>100%</span>
-              <span className="scale-center-label">Below Credibility Passing Rate</span>
+              <span className="scale-center-label">{t('results.credibility')}</span>
               <span>100%</span>
             </div>
           </div>

@@ -8,6 +8,7 @@ import Description from './home/desc';
 import Note from './home/note';
 import Footer from './home/footer';
 import Results from  './results/results';
+import { TranslationProvider } from './context/TranslationContext';
 import './App.css';
 
 function App() {
@@ -31,28 +32,30 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <Routes>
-        <Route path="/" element={
-          <>
-            <Header />
-            <Hero />
-            <InputSection 
-              textToReview={textToReview}
-              onChange={setTextToReview}
-              selectedModel={selectedModel}
-              onModelChange={setSelectedModel}
-              onAnalyze={handleAnalyze} 
-            />
-            <Description />
-            <Note />
-            <Footer />
-          </>
-        } />
+    <TranslationProvider>
+      <div className="App">
+        <Routes>
+          <Route path="/" element={
+            <>
+              <Header />
+              <Hero />
+              <InputSection 
+                textToReview={textToReview}
+                onChange={setTextToReview}
+                selectedModel={selectedModel}
+                onModelChange={setSelectedModel}
+                onAnalyze={handleAnalyze} 
+              />
+              <Description />
+              <Note />
+              <Footer />
+            </>
+          } />
 
-        <Route path="/results" element={<Results />} />
-      </Routes>
-    </div>
+          <Route path="/results" element={<Results />} />
+        </Routes>
+      </div>
+    </TranslationProvider>
   );
 }
 

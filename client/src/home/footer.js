@@ -1,7 +1,9 @@
 import React from "react";
+import { useTranslation } from '../context/TranslationContext';
 import './footer.css';
 
 const Footer = () => {
+    const { t } = useTranslation();
     const feature = {
         icon: "/qrcode.png",
         description: 'QRCode for feedback.'
@@ -10,19 +12,18 @@ const Footer = () => {
         <footer className="footer">
             <div className="footer-container">
                 <div className="footer-left">
-                    <h3 className="footer-title">Help us Improve!</h3>
+                    <h3 className="footer-title">{t('footer.title')}</h3>
                     <p className="footer-description">
-                        We would like to know more from you. Please scan the QR Code for any 
-                        concerns you'd like us to address. Happy Shopping!
+                        {t('footer.description')}
                     </p>
                     <p className="footer-contact">
-                        email@gmail.com | +63 123 456 7890
+                        {t('footer.contact')}
                     </p>
                 </div>
 
                 <div className="footer-right">
                     <img src="/qr.png" alt="QR Code" className="qr-image" />
-                    <p className="footer-text">© 2024 FraudCtrl. All rights reserved.</p>
+                    <p className="footer-text">{t('footer.copyright')}</p>
                 </div>   
             </div>     
         </footer>
