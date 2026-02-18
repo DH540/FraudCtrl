@@ -1,6 +1,7 @@
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from '../context/TranslationContext';
 import { useState, useEffect } from 'react';
+import { analyzeReview } from '../services/api';
 import './results.css';
 
 import Header from '../home/header';
@@ -17,29 +18,47 @@ function Results() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Determine color class based on score
+  const getScoreColor = (score) => {
+    if (score < 33) return 'legitimate';
+    if (score < 66) return 'suspicious';
+    return 'fraudulent';
+  };
+
+  // Calculate circle progress offset (0-251 for full circumference)
+  const getCircleOffset = (score) => {
+    if (!score && score !== 0) return 251;
+    return 251 * (1 - score / 100);
+  };
+
+  // Calculate marker position (0-100%) - inverted so high fraud score goes left
+  const getMarkerPosition = (score) => {
+    if (!score && score !== 0) return 50;
+    return 100 - score; // Inverted: high fraud = left (red), low fraud = right (green)
+  };
+
   useEffect(() => {
     const analyze = async () => {
       try {
-        const response = await fetch('/api/analyze', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text })
-        });
-
-        if (!response.ok) throw new Error('Server error');
-
-        const data = await response.json();
-        setScore(data.score);
-        setVerdict(data.verdict);
-        setExplanation(data.explanation);
+        const result = await analyzeReview(text);
+        const analysis = result.analysis;
+        
+        setScore(analysis.fraudScore);
+        setVerdict(analysis.isFraudulent ? 'Likely Fraudulent' : 'Likely Legitimate');
+        setExplanation(
+          `Confidence: ${analysis.confidence}%\n\nIndicators: ${analysis.indicators.length > 0 ? analysis.indicators.join(', ') : 'None detected'}\n\nAnalysis: ${analysis.reasoning}`
+        );
       } catch (err) {
-        setError('Failed to analyze the review. Please try again.');
+        console.error('Analysis error:', err);
+        setError(err.message || 'Failed to analyze the review. Please try again.');
       } finally {
         setLoading(false);
       }
     };
 
-    analyze();
+    if (text) {
+      analyze();
+    }
   }, [text]);
 
   if (loading) {
@@ -73,10 +92,14 @@ function Results() {
         <p className="results-header">{t('results.header')}</p>
         <div className="dashboard-grid">     
           <div className="score-card">
-            <div className="circle-chart">
+            <div className={`circle-chart ${getScoreColor(score)}`}>
               <svg viewBox="0 0 100 100">
                 <path className="circle-bg" d="M18 50 A 32 32 0 1 1 82 50 A 32 32 0 1 1 18 50" />
-                <path className="circle-progress" d="M18 50 A 32 32 0 1 1 82 50 A 32 32 0 1 1 18 50" />
+                <path
+                  className="circle-progress"
+                  d="M18 50 A 32 32 0 1 1 82 50 A 32 32 0 1 1 18 50"
+                  style={{ strokeDashoffset: getCircleOffset(score) }}
+                />
               </svg>
               <div className="score-text">{score}</div>
             </div>
@@ -89,12 +112,17 @@ function Results() {
           </div>
 
           <div className="credibility-scale">
-            <div className="scale-marker"></div>
+            <div
+              className="scale-marker"
+              style={{ left: `${getMarkerPosition(score)}%` }}
+            ></div>
             <div className="scale-bar">
-              <div className="scale-line"></div>
+              <div className="scale-line" 
+              style={{ left: `${getMarkerPosition(score)}%` }}
+            ></div>
             </div>
             <div className="scale-labels">
-              <span>100%</span>
+              <span>0%</span>
               <span className="scale-center-label">{t('results.credibility')}</span>
               <span>100%</span>
             </div>

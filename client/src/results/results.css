@@ -53,6 +53,32 @@
   stroke-dashoffset: 50;
   transform: rotate(-90deg);
   transform-origin: 50% 50%;
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+/* Color variations for different fraud score levels */
+.circle-chart.legitimate .circle-progress {
+  stroke: #1dd1a1;
+}
+
+.circle-chart.legitimate .score-text {
+  color: #1dd1a1;
+}
+
+.circle-chart.suspicious .circle-progress {
+  stroke: #feca57;
+}
+
+.circle-chart.suspicious .score-text {
+  color: #feca57;
+}
+
+.circle-chart.fraudulent .circle-progress {
+  stroke: #ff6b6b;
+}
+
+.circle-chart.fraudulent .score-text {
+  color: #ff6b6b;
 }
 
 .score-text {
@@ -62,6 +88,7 @@
   transform: translate(-50%, -50%);
   font-size: 2rem;
   font-weight: bold;
+  transition: color 0.6s ease;
 }
 
 .verdict-title {
@@ -92,6 +119,7 @@
   border-right: 10px solid transparent;
   border-top: 15px solid #666;
   transform: translateX(-50%);
+  transition: left 0.6s ease;
 }
 
 .scale-bar {
