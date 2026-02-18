@@ -13,22 +13,15 @@ import './App.css';
 
 function App() {
   const [textToReview, setTextToReview] = React.useState("");
-  const [selectedModel, setSelectedModel] = React.useState("");
   
   const navigate = useNavigate();
 
   const handleAnalyze = () => {
-    console.log("Navigating to results...");
-    
     navigate('/results', { 
       state: { 
-        text: textToReview, 
-        model: selectedModel 
+        text: textToReview
       } 
     });
-
-    console.log("Text: ", textToReview);
-    console.log("Model: ", selectedModel);
   }
 
   return (
@@ -42,8 +35,6 @@ function App() {
               <InputSection 
                 textToReview={textToReview}
                 onChange={setTextToReview}
-                selectedModel={selectedModel}
-                onModelChange={setSelectedModel}
                 onAnalyze={handleAnalyze} 
               />
               <Description />

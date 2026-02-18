@@ -68,31 +68,9 @@
 
 .controls {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   gap: 1rem;
-}
-
-.model-selector {
-  padding: 0.75rem 1rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  background-color: #ffb894;
-  color: #ffffff;
-  cursor: pointer;
-  transition: border-color 0.3s ease;
-}
-
-.model-selector:focus {
-  outline: none;
-  border-color: #ff8c61;
-}
-
-.model-note {
-  font-size: 0.8rem;
-  margin-top: 0.25rem;
-  font-style: italic;
 }
 
 .analyze-button {

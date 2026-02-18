@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from '../context/TranslationContext';
+import { useState, useEffect } from 'react';
 import './results.css';
 
 import Header from '../home/header';
@@ -8,12 +9,62 @@ import Footer from '../home/footer';
 function Results() {
   const { t } = useTranslation();
   const location = useLocation();
-  const { text, model } = location.state || { text: "No text provided...", model: "Unknown" };
+  const { text } = location.state || { text: "No text provided..." };
 
-  // Hardcoded values for now
-  const score = 80;
-  const verdict = "Most Likely Fake";
-  const explanation = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris et dolor posuere, semper magna faucibus, molestie metus. Curabitur et mi.";
+  const [score, setScore] = useState(null);
+  const [verdict, setVerdict] = useState("");
+  const [explanation, setExplanation] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const analyze = async () => {
+      try {
+        const response = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text })
+        });
+
+        if (!response.ok) throw new Error('Server error');
+
+        const data = await response.json();
+        setScore(data.score);
+        setVerdict(data.verdict);
+        setExplanation(data.explanation);
+      } catch (err) {
+        setError('Failed to analyze the review. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    analyze();
+  }, [text]);
+
+  if (loading) {
+    return (
+      <div>
+        <Header />
+        <div className="results-container">
+          <p className="results-header">Analyzing your review...</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div>
+        <Header />
+        <div className="results-container">
+          <p className="results-header">{error}</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -32,8 +83,7 @@ function Results() {
             <div>
               <h1 className="verdict-title">{verdict}</h1>
               <p className="verdict-desc">
-                According to the results of the <strong>({model || 'used model'})'s</strong> analysis,<br/>
-                the model has detected signs of a usual fake review.
+                The AI has analyzed your review and assessed its authenticity.
               </p>
             </div>
           </div>

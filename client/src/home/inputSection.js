@@ -5,8 +5,6 @@ import './inputSection.css';
 const InputSection = ({
     textToReview = "", 
     onChange = () => {}, 
-    selectedModel = "", 
-    onModelChange = () => {}, 
     onAnalyze = () => {}
 }) => {
     const { t } = useTranslation();
@@ -35,14 +33,7 @@ const InputSection = ({
                 </div>
 
                 <div className="controls">
-                    <select className="model-selector" value={selectedModel} onChange={(e) => onModelChange(e.target.value)}>
-                        <option value="">{t('inputSection.selectModel')}</option>
-                        <option value="lightgbm">LightGBM</option>
-                        <option value="xgboost">XGBoost</option>
-                        <option value="catboost">CatBoost</option>
-                    </select>
-                    
-                    <button className="analyze-button" onClick={onAnalyze} disabled={!textToReview.trim() || !selectedModel || wordCount > MAX_WORDS}>
+                    <button className="analyze-button" onClick={onAnalyze} disabled={!textToReview.trim() || wordCount > MAX_WORDS}>
                         {t('inputSection.analyzeButton')}
                     </button>
                 </div>
