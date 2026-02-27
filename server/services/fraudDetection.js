@@ -35,7 +35,7 @@ async function analyzeReview(reviewText) {
     }
 
     const response = await axios.post(OPENROUTER_API_URL, {
-      model: 'openrouter/aurora-alpha',
+      model: 'qwen/qwen3.5-35b-a3b',
       messages: [
         {
           role: 'user',
