@@ -29,22 +29,6 @@ const Header = () => {
                         <a href="#contact" className="nav-link">
                             {t('header.contact')}
                         </a>
-                        <div className="dropdown">
-                            <span className="nav-link dropdown-trigger">
-                                {t('header.documentation')}
-                            </span>
-                            <div className="dropdown-content">
-                                <a href="https://lightgbm.readthedocs.io/" target="_blank" rel="noopener noreferrer">
-                                    LightGBM
-                                </a>
-                                <a href="https://xgboost.readthedocs.io/" target="_blank" rel="noopener noreferrer">
-                                    XGBoost
-                                </a>
-                                <a href="https://catboost.ai/docs/" target="_blank" rel="noopener noreferrer">
-                                    CatBoost
-                                </a>
-                            </div>
-                        </div>
                     </nav>
 
                     <div className="language-selector">

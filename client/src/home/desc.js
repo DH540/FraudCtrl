@@ -7,15 +7,15 @@ const Description = () => {
     const features = [
         {
             icon: "/input.png",
-            description: t('description.feature')
+            description: t('description.feature1')
         },
         {
             icon: "/process.png",
-            description: t('description.feature')
+            description: t('description.feature2')
         },
         {
             icon: "/approval.png",
-            description: t('description.feature')
+            description: t('description.feature3')
         }
     ];
 

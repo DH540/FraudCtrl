@@ -13,12 +13,11 @@ export const TranslationProvider = ({ children }) => {
             header: {
                 github: 'GitHub',
                 contact: 'Contact Us',
-                documentation: 'Documentation'
             },
             hero: {
                 title: 'FraudCtrl',
                 subtitle: 'Your trusted Fake Product Review Checker',
-                description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam fermentum euismod velit, quis auctor massa pellentesque tincidunt. Maecenas eu finibus lectus, quis tristique lectus. Donec vel blandit orci. Mauris pharetra.'
+                description: 'Fake reviews cost consumers billions every year. FraudCtrl uses advanced AI models to identify suspicious patterns, bot-generated text, and incentivized reviews — so you always know what is real and what is not.'
             },
             inputSection: {
                 placeholder: 'Enter the review text here...',
@@ -27,7 +26,9 @@ export const TranslationProvider = ({ children }) => {
             },
             description: {
                 title: 'How the AI Works',
-                feature: 'Analyze product reviews using advanced machine learning models to gain insights into customer sentiment and feedback'
+                feature1: 'Start by pasting any product review text into the input box above. FraudCtrl accepts reviews of up to 100 words, giving the AI enough context to perform a thorough and accurate analysis.',
+                feature2: 'Once you click the "Analyze" button, our AI model will process the review text and evaluate its authenticity. The model is trained on a vast dataset of real and fake reviews, allowing it to identify subtle cues and patterns that may indicate fraudulent activity.',
+                feature3: 'Within seconds, FraudCtrl delivers a clear verdict on the review\'s authenticity. You will receive a confidence score and key insights to help you decide whether the review can be trusted.'
             },
             note: {
                 title: 'Important Note',
@@ -36,8 +37,8 @@ export const TranslationProvider = ({ children }) => {
             footer: {
                 title: 'Help us Improve!',
                 description: 'We would like to know more from you. Please scan the QR Code for any concerns you\'d like us to address. Happy Shopping!',
-                contact: 'email@gmail.com | +63 123 456 7890',
-                copyright: '© 2024 FraudCtrl. All rights reserved.'
+                contact: 'ouremail@gmail.com | +63 123 456 7890',
+                copyright: '© 2026 FraudCtrl. All rights reserved.'
             },
             results: {
                 header: 'The product review you requested for review is',
@@ -73,7 +74,9 @@ export const TranslationProvider = ({ children }) => {
         translations.en.inputSection.analyzeButton,
         translations.en.inputSection.selectModel,
         translations.en.description.title,
-        translations.en.description.feature,
+        translations.en.description.feature1,
+        translations.en.description.feature2,
+        translations.en.description.feature3,
         translations.en.note.title,
         translations.en.note.content,
         translations.en.footer.title,
