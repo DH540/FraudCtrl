@@ -33,7 +33,7 @@ const InputSection = ({
                 </div>
 
                 <div className="controls">
-                    <button className="analyze-button" onClick={onAnalyze} disabled={!textToReview.trim() || wordCount > MAX_WORDS}>
+                    <button className="analyze-button" onClick={onAnalyze} disabled={textToReview.trim().length < 1 || wordCount > MAX_WORDS}>
                         {t('inputSection.analyzeButton')}
                     </button>
                 </div>

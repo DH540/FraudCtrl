@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 
 import Header from './home/header';
 import Hero from './home/hero';
@@ -15,6 +15,13 @@ function App() {
   const [textToReview, setTextToReview] = React.useState("");
   
   const navigate = useNavigate();
+  const location = useLocation();
+
+  React.useEffect(() => {
+    if (location.pathname === '/' && location.state?.resetInput) {
+      setTextToReview('');
+    }
+  }, [location]);
 
   const handleAnalyze = () => {
     navigate('/results', { 

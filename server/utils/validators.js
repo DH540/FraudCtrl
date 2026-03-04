@@ -15,10 +15,10 @@ function validateReviewText(text) {
 
   const trimmedText = text.trim();
 
-  if (trimmedText.length < 5) {
+  if (trimmedText.length < 1) {
     return {
       valid: false,
-      error: 'Review text must be at least 5 characters long'
+      error: 'Review text is required'
     };
   }
 

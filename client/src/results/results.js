@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from '../context/TranslationContext';
 import { useState, useEffect } from 'react';
 import { analyzeReview } from '../services/api';
@@ -10,6 +10,7 @@ import Footer from '../home/footer';
 function Results() {
   const { t } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
   const { text } = location.state || { text: "No text provided..." };
 
   const [score, setScore] = useState(null);
@@ -61,6 +62,10 @@ function Results() {
     }
   }, [text]);
 
+  const handleAnalyzeNewText = () => {
+    navigate('/', { state: { resetInput: true } });
+  };
+
   if (loading) {
     return (
       <div>
@@ -79,6 +84,11 @@ function Results() {
         <Header />
         <div className="results-container">
           <p className="results-header">{error}</p>
+          <div className="results-actions">
+            <button className="new-analysis-button" onClick={handleAnalyzeNewText}>
+              Analyze New Text
+            </button>
+          </div>
         </div>
         <Footer />
       </div>
@@ -146,6 +156,12 @@ function Results() {
               *AI Models can make mistakes. Make sure to verify information with other reliable sources/models.
             </p>
           </div>
+        </div>
+
+        <div className="results-actions">
+          <button className="new-analysis-button" onClick={handleAnalyzeNewText}>
+            Analyze New Text
+          </button>
         </div>
       </div>
       <Footer />

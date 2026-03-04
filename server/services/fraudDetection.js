@@ -28,63 +28,148 @@ Provide your analysis in the following JSON format:
 Review to analyze:
 `;
 
+function clampScore(value) {
+  const numeric = Number(value);
+  if (Number.isNaN(numeric)) return 0;
+  return Math.max(0, Math.min(100, Math.round(numeric)));
+}
+
+function normalizeIndicators(indicators) {
+  if (!Array.isArray(indicators)) return [];
+  return indicators
+    .filter((item) => typeof item === 'string' && item.trim().length > 0)
+    .map((item) => item.trim());
+}
+
+function extractJsonObject(text) {
+  if (typeof text !== 'string') return null;
+  const trimmed = text.trim();
+  if (!trimmed) return null;
+
+  try {
+    return JSON.parse(trimmed);
+  } catch (error) {
+    // fall through and try bracket-based extraction
+  }
+
+  const firstBrace = trimmed.indexOf('{');
+  if (firstBrace === -1) return null;
+
+  let depth = 0;
+  let inString = false;
+  let isEscaped = false;
+
+  for (let i = firstBrace; i < trimmed.length; i += 1) {
+    const ch = trimmed[i];
+
+    if (inString) {
+      if (isEscaped) {
+        isEscaped = false;
+      } else if (ch === '\\') {
+        isEscaped = true;
+      } else if (ch === '"') {
+        inString = false;
+      }
+      continue;
+    }
+
+    if (ch === '"') {
+      inString = true;
+      continue;
+    }
+
+    if (ch === '{') {
+      depth += 1;
+    } else if (ch === '}') {
+      depth -= 1;
+      if (depth === 0) {
+        const candidate = trimmed.slice(firstBrace, i + 1);
+        try {
+          return JSON.parse(candidate);
+        } catch (error) {
+          return null;
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
+function normalizeAnalysis(rawAnalysis) {
+  if (!rawAnalysis || typeof rawAnalysis !== 'object') return null;
+
+  const reasoning = typeof rawAnalysis.reasoning === 'string' && rawAnalysis.reasoning.trim().length > 0
+    ? rawAnalysis.reasoning.trim()
+    : 'Model output did not include detailed reasoning.';
+
+  return {
+    isFraudulent: Boolean(rawAnalysis.isFraudulent),
+    fraudScore: clampScore(rawAnalysis.fraudScore),
+    confidence: clampScore(rawAnalysis.confidence),
+    indicators: normalizeIndicators(rawAnalysis.indicators),
+    reasoning
+  };
+}
+
+async function requestAnalysisCompletion(reviewText, strictJsonOnly = false) {
+  const strictInstruction = strictJsonOnly
+    ? '\nIMPORTANT: Return only a valid JSON object with the required keys. Do not include thinking steps, labels, markdown, or extra text.'
+    : '\nReturn a valid JSON object only.';
+
+  return axios.post(OPENROUTER_API_URL, {
+    model: 'qwen/qwen3.5-35b-a3b',
+    messages: [
+      {
+        role: 'user',
+        content: FRAUD_DETECTION_PROMPT + reviewText + strictInstruction
+      }
+    ],
+    temperature: 0.2,
+    max_tokens: 500
+  }, {
+    headers: {
+      'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': 'http://localhost:3000',
+      'X-Title': 'FraudCtrl'
+    },
+    timeout: 30000
+  });
+}
+
 async function analyzeReview(reviewText) {
   try {
     if (!process.env.OPENROUTER_API_KEY) {
       throw new Error('OPENROUTER_API_KEY is not configured');
     }
 
-    const response = await axios.post(OPENROUTER_API_URL, {
-      model: 'qwen/qwen3.5-35b-a3b',
-      messages: [
-        {
-          role: 'user',
-          content: FRAUD_DETECTION_PROMPT + reviewText
-        }
-      ],
-      temperature: 0.2,
-      max_tokens: 500
-    }, {
-      headers: {
-        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'http://localhost:3000',
-        'X-Title': 'FraudCtrl'
-      },
-      timeout: 30000
-    });
+    let response = await requestAnalysisCompletion(reviewText, false);
 
-    // Validate response structure
-    if (!response.data || !response.data.choices || !Array.isArray(response.data.choices) || response.data.choices.length === 0) {
-      throw new Error(`Invalid API response structure. Response data: ${JSON.stringify(response.data)}`);
-    }
-
-    // Extract the response content
-    const content = response.data.choices[0].message.content;
-    
-    if (!content) {
-      throw new Error('No content in API response');
-    }
-    
-    // Parse JSON from response - try multiple approaches
-    let analysis;
-    try {
-      // Try parsing as direct JSON first
-      analysis = JSON.parse(content);
-    } catch (e) {
-      // Try extracting JSON block from markdown or text
-      const jsonMatch = content.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) {
-        throw new Error(`Invalid response format. Response: ${content.substring(0, 200)}`);
+    // Retry once with stricter instruction if first output is malformed.
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      if (!response.data || !response.data.choices || !Array.isArray(response.data.choices) || response.data.choices.length === 0) {
+        throw new Error(`Invalid API response structure. Response data: ${JSON.stringify(response.data)}`);
       }
-      analysis = JSON.parse(jsonMatch[0]);
-    }
 
-    return {
-      text: reviewText,
-      analysis: analysis,
-      timestamp: new Date().toISOString()
-    };
+      const content = response.data.choices[0]?.message?.content || '';
+      const parsed = extractJsonObject(content);
+      const normalized = normalizeAnalysis(parsed);
+
+      if (normalized) {
+        return {
+          text: reviewText,
+          analysis: normalized,
+          timestamp: new Date().toISOString()
+        };
+      }
+
+      if (attempt === 0) {
+        response = await requestAnalysisCompletion(reviewText, true);
+      } else {
+        throw new Error(`Invalid response format from model. Response: ${String(content).substring(0, 200)}`);
+      }
+    }
 
   } catch (error) {
     // Better error logging for debugging
