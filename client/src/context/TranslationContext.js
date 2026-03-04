@@ -37,7 +37,7 @@ export const TranslationProvider = ({ children }) => {
             footer: {
                 title: 'Help us Improve!',
                 description: 'We would like to know more from you. Please scan the QR Code for any concerns you\'d like us to address. Happy Shopping!',
-                contact: 'ouremail@gmail.com | +63 123 456 7890',
+                contact: 'dhasalazar@mymail.mapua.edu.ph | +63 917-187-0421',
                 copyright: '© 2026 FraudCtrl. All rights reserved.'
             },
             results: {
