@@ -22,7 +22,7 @@ const Footer = () => {
                 </div>
 
                 <div className="footer-right">
-                    <img src="/qr.png" alt="QR Code" className="qr-image" />
+                    <img src="/qr-code.png" alt="QR Code" className="qr-image" />
                     <p className="footer-text">{t('footer.copyright')}</p>
                 </div>   
             </div>     
